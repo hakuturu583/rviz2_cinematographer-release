@@ -1,61 +1,71 @@
-# General
+# Rviz2 Cinematographer
 
-Based on the [rviz_animated_view_controller](https://github.com/UTNuclearRoboticsPublic/rviz_animated_view_controller) package which is a modification of the official ros package for ros kinetic.
-Ported to ROS 2 as an `rviz_common::ViewController` plugin for rviz2.
+[![CI](https://github.com/hakuturu583/rviz_cinematographer/actions/workflows/ci.yaml/badge.svg)](https://github.com/hakuturu583/rviz_cinematographer/actions/workflows/ci.yaml)
 
-Select *Cinematographer (rviz2_cinematographer_view_controller)* in the *Views* panel of rviz2 or try the demo:
+An rqt plugin to create and edit trajectories for the rviz2 camera and record its views in a video.
+
+This is a ROS 2 port of [AIS-Bonn/rviz_cinematographer](https://github.com/AIS-Bonn/rviz_cinematographer),
+released under the new package names `rviz2_cinematographer_*`.
+
+Supported ROS 2 distributions: **Humble, Jazzy, Kilted, Lyrical and Rolling**, all from a single branch.
+Distro differences (Qt5/Qt6, renamed headers) are handled with `__has_include` and CMake checks.
+The packages are built with `ament_cmake`/`colcon`, the view controller is an `rviz2` plugin,
+the GUI is an `rqt_gui_cpp` plugin and the video recorder is a composable `rclcpp` node.
+
+# Packages
+
+| Package | Description |
+|---|---|
+| [rviz2_cinematographer_msgs](rviz2_cinematographer_msgs) | Message definitions |
+| [rviz2_cinematographer_view_controller](rviz2_cinematographer_view_controller) | rviz2 view controller plugin moving the camera along trajectories |
+| [rviz2_cinematographer_video_recorder](rviz2_cinematographer_video_recorder) | Composable node writing the rendered views to a video |
+| [rviz2_cinematographer_gui](rviz2_cinematographer_gui) | rqt plugin to create and edit camera trajectories |
+
+# Build
 
 ```
-$ ros2 launch rviz2_cinematographer_view_controller demo.launch.py
+$ cd ~/ros2_ws/src
+$ git clone <this repository>
+$ cd ~/ros2_ws
+$ rosdep install --from-paths src --ignore-src -r -y
+$ colcon build --symlink-install
+$ source install/setup.bash
 ```
 
-Added more options to **move the rviz camera along a trajectory** and an option to publish the rendered images frame by frame - used for **recording videos** with a user defined frame rate. 
+# Quick start
 
-# Differences
+```
+$ ros2 launch rviz2_cinematographer_gui rviz2_cinematographer_gui.launch.py
+```
 
-**Messages** :
+An example trajectory generated in about 3 minutes:
 
-Replaced *CameraPlacement* msgs by own messages.
+![Example](readme/output.gif)
 
-*CameraMovement* is a subset of *CameraPlacement*.  
-It consists of the target camera pose, the transition_time and the interpolation_speed.  
-The last was added to provide more flexibility for the velocity of the camera.
+Visualized [Model Data](https://grabcad.com/library/office-building-9).
 
-*CameraTrajectory* consists of a vector of *CameraMovements* + interaction parameters + target_frame and yaw axis parameter.  
-All of the latter were part of the *CameraPlacement* message.
+# Further information
 
-<img src="readme/msgs_differences.png"  height="340">
+- [Instructions](rviz2_cinematographer_gui)
+- [Details - Package Structure](readme)
+- [Details - Rviz View Controller](rviz2_cinematographer_view_controller)
+- [Details - Video Recorder](rviz2_cinematographer_video_recorder)
+ 
+# Remark
 
-**Publishing** :
+The recorded video will contain a watermark in the bottom right corner.  
+Feel free to deactivate it in the GUI.  
+If you do so, please mention the *Rviz2 Cinematographer* in a comment somewhere around your video.  
+Your viewers might also be interested in using this tool.
 
-Everytime the camera is moved in rviz, the camera pose is published.
+# License
 
-Additionally Odometry msgs are published when the camera movement is triggered using the messages described above.
+Rviz2 Cinematographer is licensed under BSD-3.  
+This repository includes an adapted version of the [rviz_animated_view_controller](https://github.com/UTNuclearRoboticsPublic/rviz_animated_view_controller) package which is a modification of the official ros [rviz_animated_view_controller](https://github.com/ros-visualization/rviz_animated_view_controller) package for ros kinetic.  
+Both of the ladder are licensed under BSD-2.
 
-**Functionality** :
+# Special Thanks
 
-Using the *CameraTrajectory* msgs one can either move the camera the usual way by providing just one *CameraMovement* in the vector or move the camera along a trajectory specified by several *CameraMovements*.  
-
-Additionally the rendered images the user sees in rviz are published if a recording is initialized and a recorder is subscribing. 
-
-**Topics** :
-
-| Topic | Type | Direction |
-| -------- | -------- | -------- |
-| /rviz/camera_trajectory (configurable) | rviz2_cinematographer_msgs/msg/CameraTrajectory | subscribed |
-| /rviz/record | rviz2_cinematographer_msgs/msg/Record | subscribed |
-| /video_recorder/wait_duration | rviz2_cinematographer_msgs/msg/Wait | subscribed |
-| /rviz/current_camera_pose | geometry_msgs/msg/Pose | published |
-| /rviz/trajectory_odometry | nav_msgs/msg/Odometry | published |
-| /rviz/finished_rendering_trajectory | rviz2_cinematographer_msgs/msg/Finished | published |
-| /rviz/delete | std_msgs/msg/Empty | published |
-| /rviz/view_image | sensor_msgs/msg/Image (image_transport) | published |
-
-**Remark** :
-
-If you want wo switch from the ros *rviz_animated_view_controller* to the one provided here, you just have to switch from *CameraPlacement* to the new message type *CameraTrajectory*.
-
-It provides the same fields - except for interpolation_mode which wasn't used before and was replaced by interpolation_speed.
-
-No previously available functionality was harmed.  
-Accordingly the remaining code is untouched. 
+This repository is a fork of [AIS-Bonn/rviz_cinematographer](https://github.com/AIS-Bonn/rviz_cinematographer)
+by Jan Razlaw (Autonomous Intelligent Systems group, University of Bonn).
+Many thanks to the original authors for creating the Rviz Cinematographer and releasing it as open source.
