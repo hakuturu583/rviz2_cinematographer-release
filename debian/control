@@ -1,0 +1,12 @@
+Source: ros-lyrical-rviz2-cinematographer-view-controller
+Section: misc
+Priority: optional
+Maintainer: "Masaya Kataoka" <ms.kataoka@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), qt6-base-dev, ros-lyrical-ament-cmake, ros-lyrical-geometry-msgs, ros-lyrical-image-transport, ros-lyrical-nav-msgs, ros-lyrical-pluginlib, ros-lyrical-rclcpp, ros-lyrical-rviz-common, ros-lyrical-rviz-ogre-vendor, ros-lyrical-rviz-rendering, ros-lyrical-rviz2-cinematographer-msgs, ros-lyrical-sensor-msgs, ros-lyrical-std-msgs, ros-lyrical-ros-workspace
+Homepage: https://github.com/hakuturu583/rviz_cinematographer
+Standards-Version: 3.9.2
+
+Package: ros-lyrical-rviz2-cinematographer-view-controller
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt6core6t64, libqt6widgets6, qt6-base-dev, ros-lyrical-geometry-msgs, ros-lyrical-image-transport, ros-lyrical-launch, ros-lyrical-launch-ros, ros-lyrical-nav-msgs, ros-lyrical-pluginlib, ros-lyrical-rclcpp, ros-lyrical-rviz-common, ros-lyrical-rviz-default-plugins, ros-lyrical-rviz-ogre-vendor, ros-lyrical-rviz-rendering, ros-lyrical-rviz2, ros-lyrical-rviz2-cinematographer-msgs, ros-lyrical-sensor-msgs, ros-lyrical-std-msgs, ros-lyrical-ros-workspace
+Description: An rviz2 view controller featuring smooth transitions along camera trajectories and frame-by-frame rendering for video recording.
