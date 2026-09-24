@@ -1,0 +1,12 @@
+Source: ros-rolling-rviz2-cinematographer-video-recorder
+Section: misc
+Priority: optional
+Maintainer: "Masaya Kataoka" <ms.kataoka@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), libopencv-dev, ros-rolling-ament-cmake, ros-rolling-ament-index-cpp, ros-rolling-cv-bridge, ros-rolling-image-transport, ros-rolling-rclcpp, ros-rolling-rclcpp-components, ros-rolling-rviz2-cinematographer-msgs, ros-rolling-sensor-msgs, ros-rolling-ros-workspace
+Homepage: https://github.com/hakuturu583/rviz_cinematographer
+Standards-Version: 3.9.2
+
+Package: ros-rolling-rviz2-cinematographer-video-recorder
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libopencv-dev, ros-rolling-ament-index-cpp, ros-rolling-cv-bridge, ros-rolling-image-transport, ros-rolling-launch, ros-rolling-launch-ros, ros-rolling-rclcpp, ros-rolling-rclcpp-components, ros-rolling-rviz2-cinematographer-msgs, ros-rolling-sensor-msgs, ros-rolling-ros-workspace
+Description: Subscribes to images rendered by the rviz2 cinematographer view controller and generates a video.
