@@ -1,0 +1,12 @@
+Source: ros-lyrical-rviz2-cinematographer-gui
+Section: misc
+Priority: optional
+Maintainer: "Masaya Kataoka" <ms.kataoka@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), qt6-base-dev, ros-lyrical-ament-cmake, ros-lyrical-ament-index-cpp, ros-lyrical-geometry-msgs, ros-lyrical-interactive-markers, ros-lyrical-nav-msgs, ros-lyrical-pluginlib, ros-lyrical-qt-gui-cpp, ros-lyrical-rclcpp, ros-lyrical-rqt-gui-cpp, ros-lyrical-rviz2-cinematographer-msgs, ros-lyrical-rviz2-cinematographer-video-recorder, ros-lyrical-std-msgs, ros-lyrical-tf2, ros-lyrical-tf2-geometry-msgs, ros-lyrical-visualization-msgs, ros-lyrical-yaml-cpp-vendor, ros-lyrical-ros-workspace
+Homepage: https://github.com/hakuturu583/rviz_cinematographer
+Standards-Version: 3.9.2
+
+Package: ros-lyrical-rviz2-cinematographer-gui
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt6core6t64, libqt6widgets6, qt6-base-dev, ros-lyrical-ament-index-cpp, ros-lyrical-geometry-msgs, ros-lyrical-interactive-markers, ros-lyrical-launch, ros-lyrical-launch-ros, ros-lyrical-nav-msgs, ros-lyrical-pluginlib, ros-lyrical-qt-gui-cpp, ros-lyrical-rclcpp, ros-lyrical-rqt-gui, ros-lyrical-rqt-gui-cpp, ros-lyrical-rviz-default-plugins, ros-lyrical-rviz2, ros-lyrical-rviz2-cinematographer-msgs, ros-lyrical-rviz2-cinematographer-video-recorder, ros-lyrical-rviz2-cinematographer-view-controller, ros-lyrical-std-msgs, ros-lyrical-tf2, ros-lyrical-tf2-geometry-msgs, ros-lyrical-visualization-msgs, ros-lyrical-yaml-cpp-vendor, ros-lyrical-ros-workspace
+Description: An rqt plugin to create and edit trajectories for the rviz2 camera and record the resulting views to a video.
