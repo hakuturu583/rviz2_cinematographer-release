@@ -1,0 +1,67 @@
+name: bloom-release
+
+# Runs bloom for the selected tracks and pushes the generated upstream/release/debian/rpm
+# branches and tags to this repository. The upstream tag (the package version, e.g. 0.2.0)
+# must already exist in hakuturu583/rviz_cinematographer.
+# The rosdistro pull request is not opened by this workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tracks:
+        description: Space separated list of tracks to release
+        default: humble jazzy kilted lyrical rolling
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bloom-release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container:
+      image: ros:jazzy-ros-base
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Install bloom
+        run: |
+          apt-get update
+          apt-get install -y python3-bloom python3-rosdep fakeroot debhelper dpkg-dev git
+          rosdep update --include-eol-distros
+
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Prepare repository
+        run: |
+          git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --tags --force origin '+refs/heads/*:refs/remotes/origin/*'
+          # bloom works on local branches
+          for branch in $(git for-each-ref --format='%(refname:strip=3)' refs/remotes/origin); do
+            if [ "${branch}" != HEAD ] && [ "${branch}" != master ]; then
+              git branch --force --track "${branch}" "origin/${branch}"
+            fi
+          done
+
+      - name: Run bloom
+        run: |
+          for track in ${{ inputs.tracks }}; do
+            echo "::group::${track}"
+            git-bloom-release "${track}" -y
+            echo "::endgroup::"
+          done
+
+      - name: Push branches and tags
+        run: |
+          git push origin --all
+          git push origin --tags
