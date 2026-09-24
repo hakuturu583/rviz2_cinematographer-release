@@ -47,7 +47,8 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # GITHUB_TOKEN cannot push workflow files, so keep the upstream .github directory out of
           # the archive bloom imports into the upstream branch
-          echo '.github export-ignore' > "${RUNNER_TEMP}/gitattributes"
+          # (vcstools matches the patterns with fnmatch, hence the second line)
+          printf '.github export-ignore\n.github/* export-ignore\n' > "${RUNNER_TEMP}/gitattributes"
           git config --global core.attributesFile "${RUNNER_TEMP}/gitattributes"
           git fetch --tags --force origin '+refs/heads/*:refs/remotes/origin/*'
           # bloom works on local branches
@@ -67,5 +68,5 @@ jobs:
 
       - name: Push branches and tags
         run: |
-          git push origin --all
-          git push origin --tags
+          # Atomic, so that a rejected ref does not leave a bumped release_inc behind
+          git push --atomic origin 'refs/heads/*:refs/heads/*' 'refs/tags/*:refs/tags/*'
