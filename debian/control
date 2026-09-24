@@ -1,0 +1,12 @@
+Source: ros-humble-rviz2-cinematographer-gui
+Section: misc
+Priority: optional
+Maintainer: "Masaya Kataoka" <ms.kataoka@gmail.com>
+Build-Depends: debhelper (>= 9.0.0), qtbase5-dev, ros-humble-ament-cmake, ros-humble-ament-index-cpp, ros-humble-geometry-msgs, ros-humble-interactive-markers, ros-humble-nav-msgs, ros-humble-pluginlib, ros-humble-qt-gui-cpp, ros-humble-rclcpp, ros-humble-rqt-gui-cpp, ros-humble-rviz2-cinematographer-msgs, ros-humble-rviz2-cinematographer-video-recorder, ros-humble-std-msgs, ros-humble-tf2, ros-humble-tf2-geometry-msgs, ros-humble-visualization-msgs, ros-humble-yaml-cpp-vendor, ros-humble-ros-workspace
+Homepage: https://github.com/hakuturu583/rviz_cinematographer
+Standards-Version: 3.9.2
+
+Package: ros-humble-rviz2-cinematographer-gui
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5core5a, libqt5widgets5, qtbase5-dev, ros-humble-ament-index-cpp, ros-humble-geometry-msgs, ros-humble-interactive-markers, ros-humble-launch, ros-humble-launch-ros, ros-humble-nav-msgs, ros-humble-pluginlib, ros-humble-qt-gui-cpp, ros-humble-rclcpp, ros-humble-rqt-gui, ros-humble-rqt-gui-cpp, ros-humble-rviz-default-plugins, ros-humble-rviz2, ros-humble-rviz2-cinematographer-msgs, ros-humble-rviz2-cinematographer-video-recorder, ros-humble-rviz2-cinematographer-view-controller, ros-humble-std-msgs, ros-humble-tf2, ros-humble-tf2-geometry-msgs, ros-humble-visualization-msgs, ros-humble-yaml-cpp-vendor, ros-humble-ros-workspace
+Description: An rqt plugin to create and edit trajectories for the rviz2 camera and record the resulting views to a video.
