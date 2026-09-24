@@ -45,6 +45,10 @@ jobs:
           git config --global --add safe.directory "${GITHUB_WORKSPACE}"
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # GITHUB_TOKEN cannot push workflow files, so keep the upstream .github directory out of
+          # the archive bloom imports into the upstream branch
+          echo '.github export-ignore' > "${RUNNER_TEMP}/gitattributes"
+          git config --global core.attributesFile "${RUNNER_TEMP}/gitattributes"
           git fetch --tags --force origin '+refs/heads/*:refs/remotes/origin/*'
           # bloom works on local branches
           for branch in $(git for-each-ref --format='%(refname:strip=3)' refs/remotes/origin); do
