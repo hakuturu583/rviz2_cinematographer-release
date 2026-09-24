@@ -1,169 +1,71 @@
-# General
+# Rviz2 Cinematographer
 
-An rqt plugin serving as the front-end for the *Rviz2 Cinematographer*.  
-Create and edit trajectories to move the rviz camera along and record what is visualized in rviz directly to a video file.
+[![CI](https://github.com/hakuturu583/rviz_cinematographer/actions/workflows/ci.yaml/badge.svg)](https://github.com/hakuturu583/rviz_cinematographer/actions/workflows/ci.yaml)
 
-![trajectory_editor](readme/trajectory_editor.png)
+An rqt plugin to create and edit trajectories for the rviz2 camera and record its views in a video.
 
-# Install
+This is a ROS 2 port of [AIS-Bonn/rviz_cinematographer](https://github.com/AIS-Bonn/rviz_cinematographer),
+released under the new package names `rviz2_cinematographer_*`.
 
-Clone or download this repository into the `src` folder of your ROS 2 workspace.  
-Build the workspace with `colcon build` - building this package induces the build of the other packages.
+Supported ROS 2 distributions: **Humble, Jazzy, Kilted, Lyrical and Rolling**, all from a single branch.
+Distro differences (Qt5/Qt6, renamed headers) are handled with `__has_include` and CMake checks.
+The packages are built with `ament_cmake`/`colcon`, the view controller is an `rviz2` plugin,
+the GUI is an `rqt_gui_cpp` plugin and the video recorder is a composable `rclcpp` node.
 
-# Getting Started
+# Packages
 
-I recommend to launch the provided launch file to get a feeling for this tool without any distractions. 
+| Package | Description |
+|---|---|
+| [rviz2_cinematographer_msgs](rviz2_cinematographer_msgs) | Message definitions |
+| [rviz2_cinematographer_view_controller](rviz2_cinematographer_view_controller) | rviz2 view controller plugin moving the camera along trajectories |
+| [rviz2_cinematographer_video_recorder](rviz2_cinematographer_video_recorder) | Composable node writing the rendered views to a video |
+| [rviz2_cinematographer_gui](rviz2_cinematographer_gui) | rqt plugin to create and edit camera trajectories |
+
+# Build
+
+```
+$ cd ~/ros2_ws/src
+$ git clone <this repository>
+$ cd ~/ros2_ws
+$ rosdep install --from-paths src --ignore-src -r -y
+$ colcon build --symlink-install
+$ source install/setup.bash
+```
+
+# Quick start
 
 ```
 $ ros2 launch rviz2_cinematographer_gui rviz2_cinematographer_gui.launch.py
 ```
 
-The launch file accepts the arguments `trajectory_file` (yaml file that is loaded on start up), `start_recorder` (true/false) and `rviz_config`.
+An example trajectory generated in about 3 minutes:
 
-The tutorial below introduces most features. 
+![Example](readme/output.gif)
 
-Alternatively, you can start the provided plugin inside rqt at any time to create camera trajectories within already running rviz visualizations.  
-When starting the plugin standalone, a trajectory can be loaded and the recorder can be disabled using plugin arguments:
+Visualized [Model Data](https://grabcad.com/library/office-building-9).
 
-```
-$ ros2 run rqt_gui rqt_gui -s rviz2_cinematographer_gui/RvizCinematographerGUI --args --trajectory-file /path/to/trajectory.yaml --start-recorder false
-```
+# Further information
 
-Some [remarks](README.md#remarks) for this use case are added after the tutorial section. 
+- [Instructions](rviz2_cinematographer_gui)
+- [Details - Package Structure](readme)
+- [Details - Rviz View Controller](rviz2_cinematographer_view_controller)
+- [Details - Video Recorder](rviz2_cinematographer_video_recorder)
+ 
+# Remark
 
-# Tutorial
+The recorded video will contain a watermark in the bottom right corner.  
+Feel free to deactivate it in the GUI.  
+If you do so, please mention the *Rviz2 Cinematographer* in a comment somewhere around your video.  
+Your viewers might also be interested in using this tool.
 
-This plugin offers a whole variety of options to edit and create camera trajectories using several interactive markers.  
-Additionally it provides a set of options to control the camera speed, roll angle, trajectory smoothness and more.  
+# License
 
-Hover with your mouse over a button in the plugin to get more information.   
+Rviz2 Cinematographer is licensed under BSD-3.  
+This repository includes an adapted version of the [rviz_animated_view_controller](https://github.com/UTNuclearRoboticsPublic/rviz_animated_view_controller) package which is a modification of the official ros [rviz_animated_view_controller](https://github.com/ros-visualization/rviz_animated_view_controller) package for ros kinetic.  
+Both of the ladder are licensed under BSD-2.
 
-##### Camera Control:
+# Special Thanks
 
-The five buttons always visible on top are used to control the rviz camera.  
-Pressing one of them will move the camera with respect to the currently active marker colored in green.  
-Left-click on a marker to select the clicked as the active marker.   
-
-| Button | Functionality |
-| -------- | -------- |
-| ![alt text](icons/first.png) | Move the camera within the trajectory from the active to the first marker |
-| ![alt text](icons/prev.png ) | Move the camera to the marker previous to the active |
-| Move to Current Pose | Move the camera to the currently active marker |
-| ![alt text](icons/next.png ) | Move the camera to the marker after the active |
-| ![alt text](icons/last.png ) | Move the camera within the trajectory from the active to the last marker |
-
-Activate the *Record* to record a video of the next camera movement initiated by the five buttons above.  
-More details to recording videos are provided [below](README.md#recording-parameters). 
-
-Press the *Append at Cam Pose* button to extend the existing trajectory.  
-The button press adds another marker at the current pose of the rviz camera to the end of the trajectory.  
-This way it's esy to create a trajectory quickly by moving to camera to interesting poses and appending new markers.  
-
-![rviz2_cinematographer_gui](readme/rviz2_cinematographer_gui.png)
-
-**Remark:  
-Rviz doesn't allow to alter the view using the mouse buttons or wheel when hovering over an interactive marker.  
-To not get stuck, it's helpful to hold the right-click and move the mouse to zoom out.**
-
-### Tabs
-
-In the following, the functionalities organized in the tabs are explained in detail. 
-
-##### Timing:
-
-After creating your trajectory, you would want to specify how fast the camera is moving from one marker to the other.  
-This can be done in the *Timing* tab.  
-The table shows in its first column the duration it takes to move the camera from the previous marker to the next.  
-The values in the second column denote the duration the camera waits after reaching the pose of a marker.  
-
-![tab_timing](readme/tab_timing.png)
-
-Using the buttons below the table you can add additional markers before, at or after the currently selected marker.  
-  
-Another option to edit the number of markers defining the trajectory is to right-click on an interactive marker.
-
-![trajectory_editor_right_click](readme/trajectory_editor_right_click.png)
-
-Use *Delete* on your keyboard to remove the active marker (the rviz render window has to have the keyboard focus, i.e. click into it first). 
-
-##### Edit Pose:
-
-This tab can be used to edit the marker poses of the trajectory.  
-The easiest way to edit a marker pose is by moving the camera within rviz to the pose you like and pressing the *Set to Cam Pose*-button.  
-This sets the pose of the active marker to the selected pose.   
-
-Alternatively, the pose of and the transition time to the active marker can be tuned using the spin boxes. 
-
-The third option is to manipulate the interactive markers directly using your mouse.  
-
-![tab_edit_pose](readme/tab_edit_pose.png)
-
----
-
-##### Trajectory Parameters:
-
-| Parameter | Functionality |
-| -------- | -------- |
-| Spline | If enabled, interpolates poses using a spline |
-| Smooth Cam Velocity | Combine with spline to use trajectories' total transition time to move with a smooth velocity to first or last marker | 
-| Publishing Rate | Smoothness of spline |
-| Marker Size | In- or decrease the markers' size |
-| Show Interactive Marker Controls | Display the rings around a marker to edit the marker pose |
-| Use Up of World   | If disabled, the camera is not allowed to perform roll motions |
-| Distance to Focus Point | The distance between the eye point and the focus point of the camera |
-
-![trajectory_editor_parameters](readme/tab_trajectory_parameters.png)
-
-Thanks to https://github.com/ejmahler/SplineLibrary for providing an easy to use spline library.
-
----
-
-##### Recording Parameters:
-
-| Parameter | Functionality |
-| -------- | -------- |
-| Record to | Directly specify the path and name of the output video file - or use button to navigate in a file explorer |
-| Frames Per Second | Specify the FPS for the output video |
-| Compress Video | Toggle between codecs - divx for compressed output and FFV1 for raw videos | 
-| Add Watermark | If checked, a watermark is added at the bottom right of the video |
-
-![tab_recording_parameters](readme/tab_recording_parameters.png)
-
----
-
-##### Save/Open Trajectory:
-
-Save your trajectory using the *Save As..*-button and load existing ones using the *Open*-button.  
-Additionally one trajectory can be specified as launch argument (`trajectory_file`) to be loaded on initialization.
-
-# Remarks
-
-You have the option to create a camera trajectory within an already running rviz instance.   
-For this, just run your application and visualization in rviz2 as usual and additionally start rqt by 
-
-```
-$ rqt
-```
-
-Click on "Plugins -> Visualization -> Rviz2 Cinematographer".
-
-**Caveat:** Be aware, that rviz should **not** be started as an rqt plugin, because this experimental version of rviz crashes every time a *Path* message is received.
-
-Now you have to add the *InteractiveMarkers* (namespace `/trajectory`) and the *Path* (topic `/transformed_path`, durability *Transient Local*) displays.  
-Make sure the frame specified in the Rviz2 Cinematographer plugin is present in your tf tree, otherwise you will not be able to see the markers. 
-
-Additionally you have to select the rviz2_cinematographer_view_controller in the Rviz *Views* in order to be able to move the camera using the plugin.  
-In this view useful information is displayed e.g. the window width and height defining the video size in pixels.  
-
-![rviz_views](readme/rviz_view.png)
-
-I would recommend to use the *Fixed Frame* as the Target Frame for the view. 
-
----
-
-All of these steps were taken care of when starting the *Rviz2 Cinematographer* using the provided launch file
-
-```
-$ ros2 launch rviz2_cinematographer_gui rviz2_cinematographer_gui.launch.py
-```
-
+This repository is a fork of [AIS-Bonn/rviz_cinematographer](https://github.com/AIS-Bonn/rviz_cinematographer)
+by Jan Razlaw (Autonomous Intelligent Systems group, University of Bonn).
+Many thanks to the original authors for creating the Rviz Cinematographer and releasing it as open source.
